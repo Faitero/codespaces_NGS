@@ -104,4 +104,7 @@ fi
 
 mamba clean --all --yes
 
+# AI features (Copilot Chat, etc.) start enabled; toggle per session with session-config.sh off|on
+bash .devcontainer/session-config.sh on
+
 log "Post-create complete."

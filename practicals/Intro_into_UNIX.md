@@ -82,14 +82,14 @@ cd practicals
 # Move back up one level (.. means "parent folder")
 cd ..
 
-# Jump to the top of the project (home) folder
+# Jump to your home folder (/home/vscode in Codespaces)
 cd ~
 
 # Combine the above to go straight to a location
-cd ~/practicals
+cd /workspaces/codespaces_NGS/practicals
 ```
 
-- `~` represents your home folder (the main project directory in Codespaces).
+- `~` represents your home folder (`/home/vscode` in Codespaces). The project itself is in `/workspaces/codespaces_NGS`.
 - `/` at the start of a path is the root of the whole filesystem; avoid deleting things there.
 - `.` means the current folder and `..` means the parent folder.
 
@@ -191,7 +191,6 @@ mv notes.tmp notes.txt
 ```
 
 Keep the sandbox folder and its files (at least notes.txt and the data/ folder) for Section 6 where you will edit a file in VS Code.
-// ...existing code...
 
 Pipes (`|`) let you join commands together. The example above sends the output of `cat` into `grep`. Another handy pattern is to inspect recent commands:
 
@@ -279,7 +278,7 @@ Before starting *NextGenerationSequencingPractical.md* make sure you can:
 
 - Move to the `practicals/` folder with `cd practicals` and list its contents with `ls`.
 - Open `NextGenerationSequencingPractical.md` in VS Code to read the instructions.
-- Create a working directory for results, for example `mkdir ~/practicals/NGS_results`.
+- Create a working directory for results, for example `mkdir /workspaces/codespaces_NGS/practicals/NGS_results`.
 - Use `--help` or `man` when you encounter new tools (e.g. `man grep`).
 - Review data files with `head`, `tail`, `cat`, or `zless` so you always know what you are working on.
 
@@ -343,5 +342,4 @@ A small curated list of resources to learn and reference shell basics. Use them 
 
 
 Keep this pages bookmarked while you learn; the combination of a cheatsheet, hands‑on exercises and the full book is an efficient way to build lasting command‑line skills.
-// ...existing code...
 

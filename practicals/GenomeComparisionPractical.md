@@ -61,38 +61,45 @@ We expect that all students were introduced to BLAST in advance. For anyone not 
 We will set a shortcut for the path where we keep the practical work for this set of sessions. We will then create a new directory for this practical and work in that directory.
 
 ```{bash, eval = FALSE}
-# Set the path to your workspace
-st_path=$PWD
-# st_path="/workspaces/codespaces_NGS"
+# OPTIONAL in Codespaces: st_path, conda channels, the MultiQC install in base
+# and the mamba hook in ~/.bashrc are already configured by .devcontainer/postCreate.sh.
+# Outside Codespaces, uncomment the following steps:
+# st_path=$PWD
+# # st_path="/workspaces/codespaces_NGS"
+#
+# # The order of conda channels is important!
+# # Please make sure that you have configured your conda channels
+# # prior to installing anything with BioConda:
+# conda config --add channels defaults
+# conda config --add channels bioconda
+# conda config --add channels conda-forge
+# conda config --set channel_priority strict
+#
+# # Install MultiQC mamba in base environment for
+# mamba install -y -n base multiqc
+# # add the hook to your ~/.bashrc so every new shell is initialized automatically
+# echo 'eval "$(mamba shell hook --shell bash)"' >> ~/.bashrc
+# # apply it now in this session
+# source ~/.bashrc
 
-# The order of conda channels is important! Please make sure that you have configured your conda channels prior to installing anything with BioConda:
-conda config --add channels defaults
-conda config --add channels bioconda
-conda config --add channels conda-forge
-conda config --set channel_priority strict
-
-# Install MultiQC mamba in base environment for 
-mamba install -y -n base multiqc firefox
-# Create and Load conda environment with all the tools needed to carry on this practical.
-mamba env create -f "${st_path}"/env/.environment_GC.yaml
-# add the hook to your ~/.bashrc so every new shell is initialized automatically
-echo 'eval "$(mamba shell hook --shell bash)"' >> ~/.bashrc
-# apply it now in this session
-source ~/.bashrc
+# Create and load conda environment with all the tools needed to carry on this practical.
+mamba env create -y -f "${st_path}"/env/.environment_GC.yaml
 # Activate environment
-conda activate env_GC
-# Cleaning index cache
+mamba activate env_GC
+# Cleaning index cache (frees disk space, important on limited machines)
 mamba clean --all --yes
 
 # Create a new directory called results_GC (for Genome Comparison) for the current practical.
 mkdir "${st_path}"/course_materials/results_GC
 cd "${st_path}"/course_materials/results_GC
 
-# In that directory, create a directory called alignment and copy there the alignment Long.bam file created from the previous practical.
+# In that directory, create a directory called alignment and copy there
+# the alignment Long.bam file created from the previous practical.
 mkdir "${st_path}"/course_materials/results_GC/alignment
 # Then change to the new alignment directory.
 cd "${st_path}"/course_materials/results_GC/alignment/
-cp "${st_path}"/course_materials/resources/Long.bam "${st_path}"/course_materials/results_GC/alignment/
+cp "${st_path}"/course_materials/resources/Long.bam \
+  "${st_path}"/course_materials/results_GC/alignment/
 
 
 ```
@@ -108,25 +115,30 @@ We have a file containing a number of long reads mapped to the E. coli reference
 cd "${st_path}"/course_materials/results_GC/alignment/
 
 # Get the consensus sequence with freebayes
-# Create a variant call for all aligned nucleotides. We will create Single Nucleotide Polymorphisms and frecuencies for each nucleotide aligned.
-freebayes -f  "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta -p 1 Long.bam > Long.vcffile
+# Create a variant call for all aligned nucleotides.
+# We will create Single Nucleotide Polymorphisms and frecuencies for each nucleotide aligned.
+freebayes -f "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta \
+  -p 1 Long.bam > Long.vcffile
 
 # Examine the VCF file (to exit the 'less' viewer, just press 'q').
 head -n 10 Long.vcffile
 
 # TODO this failed on 2023!
 # Get a consensus fasta file from the VCF file
-# Merge all the possible variants to a single sequence and keep the most probable nucleotide for each site.
-vcf2fasta -f  "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta -P 1 Long.vcffile -p AFPN02.1_consensus.fasta
+# Merge all the possible variants to a single sequence and keep the most probable
+# nucleotide for each site.
+vcf2fasta -f "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta \
+  -P 1 Long.vcffile -p AFPN02.1_consensus.fasta
 
 # Rename consensus file
-mv AFPN02.1_consensus.fastaunknown_AFPN02.1_merge:0.fasta AFPN02.1_merge_consensus.fa
+mv AFPN02.1_consensus.fastaunknown_AFPN02.1_merge:0.fa AFPN02.1_merge_consensus.fa
 
 # Examine the resulting consensus fasta file (To exit less press 'q').
 less AFPN02.1_merge_consensus.fa
 
 # alternative not used
-# samtools mpileup -uf "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta Long.bam | bcftools view -cg | vcfutils.pl vcf2fq > CONSENSUS.fq
+# samtools mpileup -uf "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta Long.bam \
+#   | bcftools view -cg | vcfutils.pl vcf2fq > CONSENSUS.fq
 
 ```
 
@@ -176,7 +188,8 @@ _However, we advise you to try this another time and use instead the annotation 
 mkdir "${st_path}"/course_materials/results_GC/annotation
 cd  "${st_path}"/course_materials/results_GC/annotation
 # Download the provided annotation:
-wget "https://www.dropbox.com/scl/fi/eixd21f7alb9fyx2qhpdc/annotation.zip?rlkey=d753r0gslhtyh37w4axvcghsy&st=q2lr86c0&dl=1" -O annotation.zip
+wget "https://www.dropbox.com/scl/fi/eixd21f7alb9fyx2qhpdc/annotation.zip?rlkey=d753r0gslhtyh37w4axvcghsy&st=q2lr86c0&dl=1" \
+  -O annotation.zip
 
 # Decompress annotation folder
 unzip annotation.zip
@@ -298,13 +311,18 @@ cat antibiotic_resistance_genes_meglab.fasta | grep 'Escherichia'
 cat antibiotic_resistance_genes_meglab.fasta | grep 'Escherichia' | wc -l
 
 # Grep multiple words (-E) and count number of lines (total count 40 genes)
-cat antibiotic_resistance_genes_meglab.fasta | grep -E 'Escherichia|carbapene|CEPH|NDM|QnrB9|Metronidazole' | wc -l
+cat antibiotic_resistance_genes_meglab.fasta \
+  | grep -E 'Escherichia|carbapene|CEPH|NDM|QnrB9|Metronidazole' \
+  | wc -l
 
 # Grep multiple words and output also next line -nucleotide sequence (-A1)
-cat antibiotic_resistance_genes_meglab.fasta | grep -A1 -E 'Escherichia|carbapene|CEPH|NDM|QnrB9|Metronidazole' | wc -l
+cat antibiotic_resistance_genes_meglab.fasta \
+  | grep -A1 -E 'Escherichia|carbapene|CEPH|NDM|QnrB9|Metronidazole' \
+  | wc -l
 
 # We have more than double the number of results
-cat antibiotic_resistance_genes_meglab.fasta | grep -A1 -E 'Escherichia|carbapene|CEPH|NDM|QnrB9|Metronidazole'
+cat antibiotic_resistance_genes_meglab.fasta \
+  | grep -A1 -E 'Escherichia|carbapene|CEPH|NDM|QnrB9|Metronidazole'
 
 # Inspect output!! What is there? We note that the line containing "--" is included in the output.
 # We will need to remove it and will do so below using "sed".
@@ -322,7 +340,8 @@ cat antibiotic_resistance_genes_meglab.fasta | grep -A1 -E 'Escherichia|carbapen
 echo "line to play with sed substitute"
 
 # substitute "play" string
-# substitute in sed have the following patern 's/patern_to_search/substitute_to/g'. Note s (substitute) and g at the end (global)
+# substitute in sed have the following patern 's/patern_to_search/substitute_to/g'.
+# Note s (substitute) and g at the end (global)
 # Substitute play with learn
 echo "line to play with sed substitute" | sed 's/play/learn/g'
 # Substitute space with _
@@ -341,7 +360,9 @@ cd "${st_path}"/course_materials/results_GC/antibiotics
 # To remove the "--" separator, we use the sed command:
 # sed manual https://www.gnu.org/software/sed/manual/sed.html
 
-cat antibiotic_resistance_genes_meglab.fasta | grep -A1 -E 'Escherichia|carbapene|CEPH|NDM|QnrB9|Metronidazole' | sed '/^--$/d' | wc -l
+cat antibiotic_resistance_genes_meglab.fasta \
+  | grep -A1 -E 'Escherichia|carbapene|CEPH|NDM|QnrB9|Metronidazole' \
+  | sed '/^--$/d' | wc -l
 
 # Let's see what we just did...
 # We are using regular expressions (abbreviated to regex) to search
@@ -354,7 +375,9 @@ cat antibiotic_resistance_genes_meglab.fasta | grep -A1 -E 'Escherichia|carbapen
 # test your regex https://regexr.com/
 
 # This time we have 80 lines so we can redirect output (>) to a new file
-cat antibiotic_resistance_genes_meglab.fasta | grep -A1 -E 'Escherichia|carbapene|CEPH|NDM|QnrB9|Metronidazole' | sed '/^--$/d' > selected_antibiotic_resistance_genes_meglab.fasta
+cat antibiotic_resistance_genes_meglab.fasta \
+  | grep -A1 -E 'Escherichia|carbapene|CEPH|NDM|QnrB9|Metronidazole' \
+  | sed '/^--$/d' > selected_antibiotic_resistance_genes_meglab.fasta
 
 
 # Let's now inspect the headers of this fasta file:
@@ -370,10 +393,12 @@ head -n 1 selected_antibiotic_resistance_genes_meglab.fasta
 # We will use awk specifying "|" as a field/column separator "FS" and then print the
 # first element $1 and the last element $NF
 # Do you notice the difference?
-cat selected_antibiotic_resistance_genes_meglab.fasta | awk 'BEGIN {FS="|"}  {if(/^>/) print $1 "_" $NF }' | head -n 1
+cat selected_antibiotic_resistance_genes_meglab.fasta \
+  | awk 'BEGIN {FS="|"}  {if(/^>/) print $1 "_" $NF }' | head -n 1
 
 # We output the result to temp.fasta using (>)
-cat selected_antibiotic_resistance_genes_meglab.fasta | awk 'BEGIN {FS="|"} {if(/^>/) {print $1 "_" $NF}  else {print $1}}' > temp.fasta
+cat selected_antibiotic_resistance_genes_meglab.fasta \
+  | awk 'BEGIN {FS="|"} {if(/^>/) {print $1 "_" $NF}  else {print $1}}' > temp.fasta
 
 # and move "temp.fasta" file to "selected_antibiotic_resistance_genes.fasta"
 mv temp.fasta selected_antibiotic_resistance_genes_meglab.fasta
@@ -406,7 +431,9 @@ cd  "${st_path}"/course_materials/results_GC/annotation
 # awk manual https://en.wikipedia.org/wiki/AWK
 # gawk manual https://www.gnu.org/software/gawk/manual/gawk.html
 
-# The easiest awk call is to retrieve the 1st column. It will automatically detect field/column separator in a tabular text file. In this case it separates columns it on "blank space" (default)
+# The easiest awk call is to retrieve the 1st column.
+# It will automatically detect field/column separator in a tabular text file.
+# In this case it separates columns it on "blank space" (default)
 awk '{print $1}' annotation.gff | head
 # Compare it with the original. Note that with head we are only taking the first 2 lines (-n 2)
 head -n 2 annotation.gff
@@ -419,7 +446,8 @@ awk '{print $1 " " $2}' annotation.gff | head -n 2
 head -n 3 annotation.gff
 
 
-# awk call, retrieve 1st and 2nd columns. We can supply an initial field separator of a tab via the command FS="\t" - sometimes this will be necessary to parse the text. Note that on the print statement we also separate fields with tab "\t".
+# awk call, retrieve 1st and 2nd columns. We can supply an initial field separator of a tab
+# via the command FS="\t" - sometimes this will be necessary to parse the text. Note that on the print statement we also separate fields with tab "\t".
 awk 'BEGIN {FS="\t"} {print $1 "\t" $2}' annotation.gff | head -n 3
 # Compare it with the original.
 head annotation.gff | head -n 3
@@ -490,27 +518,36 @@ cat annotation.gff | grep -E 'antibiotic'
 
 # Transform gff file to bed 6 columns
 # Grep lines with "antibiotic" string and transform to bed format
-# on the print statement we can include any string between quotes like I'm doing with "sequence1"
-cat annotation.gff | grep -E 'antibiotic' | awk 'BEGIN {FS="\t"};  {print "sequence1" "\t" $4 "\t" $5 "\t" $3 "\t" $6 "\t" $7}'
+# on the print statement we can include any string between quotes
+# like I'm doing with "sequence1"
+cat annotation.gff | grep -E 'antibiotic' \
+  | awk 'BEGIN {FS="\t"};  {print "sequence1" "\t" $4 "\t" $5 "\t" $3 "\t" $6 "\t" $7}'
 
 
 # Grep several antibiotic's names and transform to bed with awk.
 
-# Note use of split command. We are spiting field $9 (9th) into everything that start with "=" and end with ";".
+# Note use of split command. We are spiting field $9 (9th) into everything
+# that start with "=" and end with ";".
 # We are trying to capture the gene name that has the format ";gene=gene_name;".
-# Then we assign captured array to "captured" variable and require that the split has more than 10 elements ">=10".
+# Then we assign captured array to "captured" variable and require that the split
+# has more than 10 elements ">=10".
 # Then we select the 12th element "captured[12]", which equals to gene acronym.
 # We also retrieve the "captured[4]" element that will be the protein product.
-cat annotation.gff | grep -E 'antibio|penici|lactama|macrolide|tetracycli|streptomycin|sulfonamide|ampheni|tetracycline|Tellurite|nalidixic' | awk 'BEGIN {FS="\t"}  split($9, captured, /[(=);]/) >=10  {print "sequence1" "\t" $4 "\t" $5 "\t" captured[12] "\t" captured[4] "\t" $7}' | head -n 5
+cat annotation.gff \
+  | grep -E 'antibio|penici|lactama|macrolide|tetracycli|streptomycin|sulfonamide|ampheni|tetracycline|Tellurite|nalidixic' \
+  | awk 'BEGIN {FS="\t"}  split($9, captured, /[(=);]/) >=10  {print "sequence1" "\t" $4 "\t" $5 "\t" captured[12] "\t" captured[4] "\t" $7}' \
+  | head -n 5
 
 
 # Send output to file.bed "present_antiotic_resistance_genes.bed"
-cat annotation.gff | grep -E 'antibio|penici|lactama|macrolide|tetracycli|streptomycin|sulfonamide|ampheni|tetracycline|Tellurite|nalidixic' \
+cat annotation.gff \
+| grep -E 'antibio|penici|lactama|macrolide|tetracycli|streptomycin|sulfonamide|ampheni|tetracycline|Tellurite|nalidixic' \
 | awk 'BEGIN {FS="\t"}  split($9, captured, /[(=);]/) >=10  {print "sequence1" "\t" $4 "\t" $5 "\t" captured[12] "\t" captured[4] "\t" $7}' \
 > present_in_AFPN02_antibiotic_resistance_genes.bed
 
-# Move "present_in_AFPN02_antibiotic_resistance_genes.bed" o antibiotics/ folder
-mv present_in_AFPN02_antibiotic_resistance_genes.bed  "${st_path}"/course_materials/results_GC/antibiotics
+# Move "present_in_AFPN02_antibiotic_resistance_genes.bed" to antibiotics/ folder
+mv present_in_AFPN02_antibiotic_resistance_genes.bed \
+  "${st_path}"/course_materials/results_GC/antibiotics
 
 # Go to antibiotics directory
 cd  "${st_path}"/course_materials/results_GC/antibiotics
@@ -522,7 +559,9 @@ cd  "${st_path}"/course_materials/results_GC/antibiotics
 # for this task we will use bedtools.
 # bedtools manual https://bedtools.readthedocs.io/en/latest/content/bedtools-suite.html
 # bedtools getfasta manual https://bedtools.readthedocs.io/en/latest/content/tools/getfasta.html
-bedtools getfasta -nameOnly -s -fi  "${st_path}"/course_materials/results_GC/annotation/genome.fna -bed present_in_AFPN02_antibiotic_resistance_genes.bed -fo present_in_AFPN02_antibiotic_resistance_genes.fasta
+bedtools getfasta -nameOnly -s -fi "${st_path}"/course_materials/results_GC/annotation/genome.fna \
+  -bed present_in_AFPN02_antibiotic_resistance_genes.bed \
+  -fo present_in_AFPN02_antibiotic_resistance_genes.fasta
 
 # Note addition of nucleotide sequence
 head -n 1 present_in_AFPN02_antibiotic_resistance_genes.bed
@@ -535,7 +574,8 @@ head -n 1 present_in_AFPN02_antibiotic_resistance_genes.fasta
 # We need to modify the header to end up with ">tetA" only.
 # (i.e. just the fasta beginning ">" and gene symbol "tetA")
 # This can be done with another sed one-liner job.
-# Find "(" -  parentheses. Then match anything (.) zero or more times (*) and substitute with nothing.
+# Find "(" -  parentheses. Then match anything (.) zero or more times (*)
+# and substitute with nothing.
 cat present_in_AFPN02_antibiotic_resistance_genes.fasta | sed 's/(.*//g' > temp.fasta
 
 # Move the temporal file to present_in_AFPN02_antibiotic_resistance_genes.fasta
@@ -552,15 +592,21 @@ head -n 1 present_in_AFPN02_antibiotic_resistance_genes.fasta
 
 # We need to modify it to ">tetA" only. Just the fasta beginning ">" and gene acronym "tetA".
 # This another sed one-liner job
-# Find "::" - since colon is special character for regex, we need to 'escape' them with forward slash (\:\:). The '\' tells the regex interpreter that the following character is to be interpreted literally, rather than as a regex command.
+# Find "::" - since colon is special character for regex, we need to 'escape' them
+# with forward slash (\:\:).
+# The '\' tells the regex interpreter that the following character is to be interpreted literally,
+# rather than as a regex command.
 # Then match anything (.) zero or more times (*)
-cat present_in_AFPN02_antibiotic_resistance_genes.fasta | sed 's/\:\:.*//g' > present_in_AFPN02_antibiotic_resistance_genes_acronym.fasta
+cat present_in_AFPN02_antibiotic_resistance_genes.fasta \
+  | sed 's/\:\:.*//g' > present_in_AFPN02_antibiotic_resistance_genes_acronym.fasta
 
 # Modify file after cleaning
-mv present_in_AFPN02_antibiotic_resistance_genes_acronym.fasta present_in_AFPN02_antibiotic_resistance_genes.fasta
+mv present_in_AFPN02_antibiotic_resistance_genes_acronym.fasta \
+  present_in_AFPN02_antibiotic_resistance_genes.fasta
 
 # Move all the antibiotic files to antibiotic folder
-mv present_in_AFPN02_antibiotic_resistance_genes*   "${st_path}"/course_materials/results_GC/antibiotics
+mv present_in_AFPN02_antibiotic_resistance_genes*  \
+  "${st_path}"/course_materials/results_GC/antibiotics
 
 ```
 
@@ -576,11 +622,15 @@ cd "${st_path}"/course_materials/results_GC/antibiotics
 
 # Merge antibiotic files.
 # Present in AFPN02.1 strain "present_in_AFPN02_antibiotic_resistance_genes.fasta"
-# Some more resistance genes captured and cleaned from meglab web-server "selected_antibiotic_resistance_genes_meglab.fasta"
-cat present_in_AFPN02_antibiotic_resistance_genes.fasta selected_antibiotic_resistance_genes_meglab.fasta > final_comparison_antibiotics.fasta
+# Some more resistance genes captured and cleaned from meglab web-server
+# "selected_antibiotic_resistance_genes_meglab.fasta"
+cat present_in_AFPN02_antibiotic_resistance_genes.fasta \
+  selected_antibiotic_resistance_genes_meglab.fasta > final_comparison_antibiotics.fasta
+
 
 # Copy all the new files to wholeGenomeExamples folder
-cp final_comparison_antibiotics.fasta  "${st_path}"/course_materials/genomes/wholeGenomeExamples
+cp final_comparison_antibiotics.fasta \
+  "${st_path}"/course_materials/genomes/wholeGenomeExamples
 
 ```
 
@@ -620,10 +670,12 @@ To run BRIG from the command-line, we need to:
 mkdir -p  "${st_path}"/course_materials/results_GC/BRING_output
 
 # Copy finalAFPN02.1.genome.fasta sequence to wholeGenomeExamples folder.
-cp  "${st_path}"/course_materials/results_GC/annotation/genome.fna "${st_path}"/course_materials/genomes/wholeGenomeExamples/AFPN02.1.genome.fasta
+cp  "${st_path}"/course_materials/results_GC/annotation/genome.fna \
+  "${st_path}"/course_materials/genomes/wholeGenomeExamples/AFPN02.1.genome.fasta
 
 # Decompress BRIG software
-unzip "${st_path}"/course_materials/src/BRIG-0.95-dist.zip -d "${st_path}"/course_materials/src/
+unzip "${st_path}"/course_materials/src/BRIG-0.95-dist.zip \
+  -d "${st_path}"/course_materials/src/
 
 # Then reopen run BRIG software:
 cd  "${st_path}"/course_materials/src/BRIG-0.95-dist
@@ -665,7 +717,7 @@ Initially, we need to select the reference sequence. The aim of this circular BL
 
 1. Set **Spacer** as `50` nt.
 2. Modify `null` in the **Legend text** for each ring. In this case include name `E_coli_CFT_073`
-3. Select the required sequences (`E_coli_CFT_073.fna`) from the **Data pool** and click **Add data**.
+3. Select the required sequences (`E_coli_CFT073.fna`) from the **Data pool** and click **Add data**.
 4. Choose a **Ring colour**.
 5. Set upper `90` and lower `70` **Identity thresholds**.
 6. Click **Add new ring** and repeat these steps for each new ring (new strain in comparison).

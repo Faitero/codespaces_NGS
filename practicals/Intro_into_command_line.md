@@ -71,26 +71,30 @@ We will set a shortcut for the path where we keep the practical work for this se
 If you have copied the course_materials as suggested in the last practical, you should be able to start the practical. There is one ore thing you can do to make life easier: set a shell variable to point to the parent directory of the course_materials so you don't have to type the full path. The following will work on the default shell, elsewhere and and on Codespaces:
 
 ```{bash, eval = FALSE}
-# Include environmental variable ToDo
-st_path=$PWD
-# st_path="/workspaces/codespaces_NGS"
-
-# The order of conda channels is important! Please make sure that you have configured your conda channels prior to installing anything with BioConda:
-conda config --add channels defaults
-conda config --add channels bioconda
-conda config --add channels conda-forge
-conda config --set channel_priority strict
-
-# Install MultiQC mamba in base environment for 
-mamba install -y -n base multiqc firefox
+# OPTIONAL in Codespaces: st_path, conda channels, the MultiQC install in base
+# and the mamba hook in ~/.bashrc are already configured by .devcontainer/postCreate.sh.
+# Outside Codespaces, uncomment the following steps:
+# # Include environmental variable ToDo
+# st_path=$PWD
+# # st_path="/workspaces/codespaces_NGS"
+#
+# # The order of conda channels is important!
+# # Please make sure that you have configured your conda channels prior to installing anything with BioConda:
+# conda config --add channels defaults
+# conda config --add channels bioconda
+# conda config --add channels conda-forge
+# conda config --set channel_priority strict
+#
+# # Install MultiQC mamba in base environment for
+# mamba install -y -n base multiqc
+# # Initialize your shell before using activate and deactivate.
+# eval "$(mamba shell hook --shell bash)"
 
 # Create and load mamba environment with all the tools needed to carry on this practical.
-mamba env create -f "${st_path}"/env/.environment_NGS.yaml
-# Initialize your shell before using activate and deactivate.
-eval "$(mamba shell hook --shell bash)"
+mamba env create -y -f "${st_path}"/env/.environment_NGS.yaml
 # Activate environment
 mamba activate env_NGS
-# Cleaning index cache
+# Cleaning index cache (frees disk space, important on limited machines)
 mamba clean --all --yes
 
 ```   
@@ -220,8 +224,9 @@ less thirtyfirst.fq
 ```{bash, eval = FALSE}
 cat thirtyfirst.fq > second.fq
 
-# if the file exists and you want to overwrite it, use >!
-cat thirtyfirst.fq >! second.fq
+# if the file exists and you want to overwrite it, use >|
+# (">!" is zsh syntax; in bash it silently creates a file named "!")
+cat thirtyfirst.fq >| second.fq
 
 # if you want to append the results, use >>
 cat thirtyfirst.fq >> second.fq
@@ -414,7 +419,8 @@ ll
 # Change permissions
 chmod a+x first.sh
 # (this changes the permissions for the file so that it now becomes
-# executable (that's the "x" bit) to all users (that's the "a" bit)). Could you spot the difference?
+# executable (that's the "x" bit) to all users (that's the "a" bit)).
+# Could you spot the difference?
 ./first.sh
 
 ```

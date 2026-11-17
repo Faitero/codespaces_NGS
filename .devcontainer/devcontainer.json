@@ -50,7 +50,13 @@
             "bioSyntax.bioSyntax",
             "igvteam.vscode-igv",
             "mathematic.vscode-pdf@0.1.6"
-          ]
+          ],
+          "settings": {
+            "markdown-pdf.executablePath": "/usr/bin/google-chrome-stable",
+            "markdown-pdf.styles": ["/workspaces/codespaces_NGS/.devcontainer/pdf-code.css"],
+            "r.lsp.enabled": false,
+            "workbench.secondarySideBar.defaultVisibility": "hidden"
+          }
         }
       }
  }

@@ -93,8 +93,26 @@ conda config --add channels bioconda
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 
-log "Installing MultiQC and Firefox in the base environment..."
-mamba install -y -n base multiqc firefox
+# Google Chrome: used by the Markdown to PDF extension and to open reports in the noVNC desktop
+install_chrome() {
+  if command -v google-chrome-stable >/dev/null 2>&1; then
+    log "Google Chrome already installed; skipping."
+    return
+  fi
+
+  log "Installing Google Chrome..."
+  local deb
+  deb="$(mktemp --suffix=.deb)"
+  curl -fsSL -o "$deb" https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  sudo apt-get update
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "$deb"
+  rm -f "$deb"
+  sudo rm -rf /var/lib/apt/lists/*
+}
+install_chrome
+
+log "Installing MultiQC in the base environment..."
+mamba install -y -n base multiqc
 
 # Load mamba in every new shell, without duplicating the line on re-runs
 BASHRC_HOOK='eval "$(mamba shell hook --shell bash)"'

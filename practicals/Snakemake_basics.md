@@ -388,7 +388,8 @@ would create the product of all elements of `SAMPLES` and the list
 `[0, 1]`, yielding
 
 ``` python
-["sorted_reads/A.0.bam", "sorted_reads/A.1.bam", "sorted_reads/B.0.bam", "sorted_reads/B.1.bam"]
+["sorted_reads/A.0.bam", "sorted_reads/A.1.bam",
+ "sorted_reads/B.0.bam", "sorted_reads/B.1.bam"]
 ```
 
 Here, we use only the simple case of `expand`. We first let Snakemake

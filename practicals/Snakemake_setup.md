@@ -64,21 +64,24 @@ Download and run the installer appropriate for your operating system and CPU arc
 #### Linux (x86_64)
 
 ```bash
-curl -L https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -o Miniforge3-Linux-x86_64.sh
+curl -L https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh \
+  -o Miniforge3-Linux-x86_64.sh
 bash Miniforge3-Linux-x86_64.sh
 ```
 
 #### macOS (x86_64)
 
 ```bash
-curl -L https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-x86_64.sh -o Miniforge3-MacOSX-x86_64.sh
+curl -L https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-x86_64.sh \
+  -o Miniforge3-MacOSX-x86_64.sh
 bash Miniforge3-MacOSX-x86_64.sh
 ```
 
 #### macOS (arm64)
 
 ```bash
-curl -L https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh -o Miniforge3-MacOSX-arm64.sh
+curl -L https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh \
+  -o Miniforge3-MacOSX-arm64.sh
 bash Miniforge3-MacOSX-arm64.sh
 ```
 
@@ -104,7 +107,8 @@ cd snakemake-tutorial
 Next, download the tutorial example data from GitHub. This compressed archive contains the biological input data (sequencing reads and a reference genome) and the `environment.yaml` file that describes the software dependencies of the tutorial environment:
 
 ```bash
-curl -L https://api.github.com/repos/snakemake/snakemake-tutorial-data/tarball -o snakemake-tutorial-data.tar.gz
+curl -L https://api.github.com/repos/snakemake/snakemake-tutorial-data/tarball \
+  -o snakemake-tutorial-data.tar.gz
 ```
 
 Extract only the files needed from the archive (the `data/` directory and `environment.yaml`). The `--strip 1` option removes the top-level directory name that GitHub adds automatically to the archive, so the files land directly in `snakemake-tutorial/`:

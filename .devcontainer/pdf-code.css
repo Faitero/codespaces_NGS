@@ -1,0 +1,10 @@
+/* Keep each code line on one line in the PDF so copying from it keeps the line breaks */
+pre,
+pre:not(.hljs),
+pre code,
+pre.hljs code > div {
+  white-space: pre !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  font-size: 8pt;
+}

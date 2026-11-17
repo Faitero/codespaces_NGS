@@ -32,15 +32,16 @@ If you have copied the course_materials as suggested in the last practical, you 
 # st_path=$PWD
 # st_path="/workspaces/codespaces_NGS"
 #
-# Conda channels, MultiQC/Firefox in base and the mamba hook in ~/.bashrc:
-# # The order of conda channels is important! Please make sure that you have configured your conda channels prior to installing anything with BioConda:
+# Conda channels, MultiQC in base and the mamba hook in ~/.bashrc:
+# # The order of conda channels is important! Please make sure that you have configured
+# # your conda channels prior to installing anything with BioConda:
 # conda config --add channels defaults
 # conda config --add channels bioconda
 # conda config --add channels conda-forge
 # conda config --set channel_priority strict
 #
 # # Install MultiQC mamba in base environment for
-# mamba install -y -n base multiqc firefox
+# mamba install -y -n base multiqc
 #
 # # add the hook to your ~/.bashrc so every new shell is initialized automatically
 # echo 'eval "$(mamba shell hook --shell bash)"' >> ~/.bashrc
@@ -51,10 +52,12 @@ If you have copied the course_materials as suggested in the last practical, you 
 # 1. Create the mamba environment with all the tools for this practical (run once).
 mamba env create -y -f "${st_path}"/env/.environment_NGS.yaml
 
-# 2. Clean the package cache to free disk space (run once, after creating the environment).
+# 2. Clean the package cache to free disk space
+#    (run once, after creating the environment).
 mamba clean --all --yes
 
-# 3. Activate it (run in every new terminal before using igv, cutadapt, bowtie2, samtools...).
+# 3. Activate it (run in every new terminal before using igv, cutadapt, bowtie2,
+#    samtools...).
 mamba activate env_NGS
 ```   
 
@@ -107,15 +110,18 @@ cd "${st_path}"/course_materials/fastq/
 
 
 # Download fastq file
-wget "https://www.dropbox.com/scl/fi/ybydpinv321r5xgs36xis/final_merge_synthetic_reads.fq.gz?rlkey=aisd5gxlqpom574j6k6qo4i2p&st=tu96wrv5&dl=1" -O final_merge_synthetic_reads.fq.gz
+wget "https://www.dropbox.com/scl/fi/ybydpinv321r5xgs36xis/final_merge_synthetic_reads.fq.gz?rlkey=aisd5gxlqpom574j6k6qo4i2p&st=tu96wrv5&dl=1" \
+  -O final_merge_synthetic_reads.fq.gz
 
-# Examine .gz compress fastq file with `zless`. You can advance pages by pressing "space bar". NOTE exit pressing "q" quit!
+# Examine .gz compress fastq file with `zless`. You can advance pages by pressing "space bar".
+# NOTE exit pressing "q" quit!
 zless final_merge_synthetic_reads.fq.gz
 
 # Extract reads. Realise that after "gunzip" command the file doesn't end in ".gz".
 gunzip final_merge_synthetic_reads.fq.gz
 
-# Examine fastq file with less. Since the file is not compressed anymore we can see it with simple "less"" NOT "zless". NOTE exit pressing "q" quit
+# Examine fastq file with less. Since the file is not compressed anymore we can see it with
+# simple "less"" NOT "zless". NOTE exit pressing "q" quit
 less final_merge_synthetic_reads.fq
 
 
@@ -160,11 +166,11 @@ cd "${st_path}"/course_materials/fastq/
 # Run FastQC
 fastqc final_merge_synthetic_reads.fq 
 
-# Visualise fastQC report in firefox web-browser. NOTE exit with "ctr + c" from the command line.
-/opt/conda/bin/firefox final_merge_synthetic_reads_fastqc.html
+# Visualise fastQC report in Google Chrome. NOTE exit with "ctr + c" from the command line.
+google-chrome-stable final_merge_synthetic_reads_fastqc.html
 
 ```
-> Open the desktop GUI, or Graphical User Interface, using the port 6080, to visualize the MultiQC report using Firefox browser!! 
+> Open the desktop GUI, or Graphical User Interface, using the port 6080, to visualize the MultiQC report using Google Chrome!! 
 > Close the browser with the `X` top right window or `Ctrl + C` to liberate terminal.
 
      
@@ -294,14 +300,14 @@ Your cutadapt output should look like more or less like this:
 # "-f" removing previous results.
 /opt/conda/bin/multiqc . -f
 
-# Open in Firefox
-/opt/conda/bin/firefox multiqc_report.html
+# Open in Google Chrome
+google-chrome-stable multiqc_report.html
 
 
 ``` 
 
 If this doesn't work you could navigate with the folder system **File System > Computer > workspaces > codespaces_NGS > course_materials > fastq ...**
-and open "multiqc_report.html" with Firefox or any other web browser. To select a Web browser, open applications tab on the top left 
+and open "multiqc_report.html" with Google Chrome or any other web browser. To select a Web browser, open applications tab on the top left 
 corner and select Internet > Google Chrome. Or just drag and drop the multiqc-report to Chrome. 
 
 ![ Self Bew Browser ](figures/self_web_browser.png)  
@@ -330,11 +336,13 @@ cp "${st_path}"/course_materials/resources/Iterate_fastq.sh .
 # Inspect simple shell script
 less Iterate_fastq.sh
 
-# To iterate FastQC program over all the .fastq files on the current folder and run multiQC wrapper that will search and parse all the NGS output files.
+# To iterate FastQC program over all the .fastq files on the current folder and run multiQC
+# wrapper that will search and parse all the NGS output files.
 bash Iterate_fastq.sh
 
-# Open multiple FastQC reports on Firefox. Check multiQC report !!! NOTE Close firefox window or "ctr + c" on the command line.
-/opt/conda/bin/firefox multiqc_report.html
+# Open multiple FastQC reports on Google Chrome. Check multiQC report !!!
+# NOTE Close the Chrome window or "ctr + c" on the command line.
+google-chrome-stable multiqc_report.html
 
 ```
 
@@ -431,7 +439,8 @@ Similarly to global vs local alignments you came across in the Sequence Analysis
 ```
 ~End-to-end alignment example~
 
-The following is an "end-to-end" alignment because it involves all the characters in the read. Such an alignment can be produced by Bowtie2 in either end-to-end mode or in local mode.
+The following is an "end-to-end" alignment because it involves all the characters in the read.
+Such an alignment can be produced by Bowtie2 in either end-to-end mode or in local mode.
 
 Read:      GACTGGGCGATCTCGACTTCG
 Reference: GACTGCGATCTCGACATCG
@@ -443,7 +452,10 @@ Alignment:
 
 ~Local alignment example~
 
-The following is a "local" alignment because some of the characters at the ends of the read do not participate. In this case, 4 characters are omitted (or "soft trimmed" or "soft clipped") from the beginning and 3 characters are omitted from the end. This sort of alignment can be produced by Bowtie 2 only in local mode.
+The following is a "local" alignment because some of the characters at the ends of the read do
+not participate. In this case, 4 characters are omitted (or "soft trimmed" or "soft clipped")
+from the beginning and 3 characters are omitted from the end. This sort of alignment can be
+produced by Bowtie 2 only in local mode.
 
 Read:      ACGGTTGCGTTAATCCGCCACG
 Reference: TAACTTGCGTTAAATCCGCCTGG
@@ -499,16 +511,25 @@ cd "${st_path}"/course_materials/results_NGS1
 # 2>              # Redirect error output to file in bash 
 
 # Align trimmed_BQ.fq reads
-bowtie2 --all --end-to-end -x "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge -U "${st_path}"/course_materials/fastq/trimmed_BQ.fq -S BQ.sam 2> BQ_bowtie_stats.txt
+bowtie2 --all --end-to-end \
+  -x "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge \
+  -U "${st_path}"/course_materials/fastq/trimmed_BQ.fq -S BQ.sam 2> BQ_bowtie_stats.txt
 
 # Align trimmed_Long.fq reads
-bowtie2 --all --end-to-end -x "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge -U "${st_path}"/course_materials/fastq/trimmed_Long.fq -S Long.sam 2> Long_bowtie_stats.txt
+bowtie2 --all --end-to-end \
+  -x "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge \
+  -U "${st_path}"/course_materials/fastq/trimmed_Long.fq -S Long.sam \
+  2> Long_bowtie_stats.txt
 
 # Align trimmed_Negative.fq
-bowtie2 --all --end-to-end -x "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge -U "${st_path}"/course_materials/fastq/trimmed_Negative.fq -S Negative.sam 2> Negative_bowtie_stats.txt
+bowtie2 --all --end-to-end \
+  -x "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge \
+  -U "${st_path}"/course_materials/fastq/trimmed_Negative.fq -S Negative.sam 2> Negative_bowtie_stats.txt
 
 # Align trimmed_Positive.fq reads
-bowtie2 --all --end-to-end -x "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge -U "${st_path}"/course_materials/fastq/trimmed_Positive.fq -S Positive.sam 2> Positive_bowtie_stats.txt
+bowtie2 --all --end-to-end \
+  -x "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge \
+  -U "${st_path}"/course_materials/fastq/trimmed_Positive.fq -S Positive.sam 2> Positive_bowtie_stats.txt
 
 ```
 
@@ -528,11 +549,12 @@ head Negative_bowtie_stats.txt
 ```{bash, eval = FALSE}
 /opt/conda/bin/multiqc . -f
 
-# Open in Firefox and explore mapping results. 
+# Open in Google Chrome and explore mapping results. 
 # Are you able to map negative or BQ samples? 
-# Why? Check fastQC statistics of negative or BQ samples in comparison with Positive or Long samples.
+# Why? Check fastQC statistics of negative or BQ samples in comparison with Positive or Long
+# samples.
 # Can you improve mapping trimming reads using previous steps? or even using Bowtie2?
-/opt/conda/bin/firefox multiqc_report.html
+google-chrome-stable multiqc_report.html
 
 ```
 
@@ -707,7 +729,7 @@ cd "${st_path}"/course_materials/
 /opt/conda/bin/multiqc . -f
 
 # Inspect MultiQC report
-/opt/conda/bin/firefox multiqc_report.html
+google-chrome-stable multiqc_report.html
 ```
   
 
@@ -736,7 +758,9 @@ This section is intended to automatically load the genome and reads to quickly d
 # Load genome reference file "AFPN02.1_merge.fasta"
 # Go to genome locus "AFPN02.1_merge:2397587"
 # Load Long and Positive aligned data to IGV. 
-igv --genome "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta "${st_path}"/course_materials/results_NGS1/Long.bam --locus "AFPN02.1_merge:2397587" "${st_path}"/course_materials/results_NGS1/Positive.bam
+igv --genome "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta \
+  "${st_path}"/course_materials/results_NGS1/Long.bam --locus "AFPN02.1_merge:2397587" \
+  "${st_path}"/course_materials/results_NGS1/Positive.bam
 
 
 ```
@@ -769,8 +793,10 @@ cd "${st_path}"/course_materials/results_NGS1/
 ####################################################
 # Get consensus sequence merging all the variants 
 ####################################################
-freebayes -f "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta -p 1 Long.bam > Long.vcffile
-vcf2fasta -f "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta -P 1 Long.vcffile -p AFPN02.1_consensus.fasta
+freebayes -f "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta \
+  -p 1 Long.bam > Long.vcffile
+vcf2fasta -f "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta \
+  -P 1 Long.vcffile -p AFPN02.1_consensus.fasta
 
 # Rename file to more precise name
 mv AFPN02.1_consensus.fastaunknown_AFPN02.1_merge:0.fa AFPN02.1_merge_consensus.fa
@@ -782,7 +808,8 @@ less Long.vcffile
 less AFPN02.1_merge_consensus.fa
 
 # alternative not used
-# samtools mpileup -uf "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta Long.bam | bcftools view -cg | vcfutils.pl vcf2fq > CONSENSUS.fq
+# samtools mpileup -uf "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta Long.bam |
+#   bcftools view -cg | vcfutils.pl vcf2fq > CONSENSUS.fq
 
 
 ```

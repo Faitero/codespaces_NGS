@@ -63,6 +63,9 @@ All the materials will be handed to you over Moddle or ADI. Lectures will be PDF
 - `practicals/GenomeComparisionPractical.md`: Comparative genomics practical.
 
 ## Other Codespaces repository
+
+For RStudio-based analysis, please fork here: [Faitero/codespaces_RStudio](https://github.com/Faitero/codespaces_RStudio)
+
 - Additional modules on RNA-Seq, transcript sequencing, Snakemake, and GitHub Copilot integration are under a different repository that we will load later on.
 
 ## Staying Up to Date

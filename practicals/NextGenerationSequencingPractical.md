@@ -9,7 +9,7 @@ output:
 ---
 
     
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Faitero/codespaces_NGS-1?quickstart=1)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Faitero/codespaces_NGS?quickstart=1)
 
 [![Continue GitHub Codespaces](https://img.shields.io/badge/GitHub-Codespaces-181717?logo=github)](https://github.com/codespaces)
 
@@ -25,31 +25,37 @@ We will set a shortcut for the path where we keep the practical work for this se
 If you have copied the course_materials as suggested in the last practical, you should be able to start the practical. There is one ore thing you can do to make life easier: set a shell variable to point to the parent directory of the course_materials so you don't have to type the full path. The following will work on the default shell, elsewhere and and on Codespaces:
 
 ```{bash, eval = FALSE}
-# Set the path to your workspace
-# Include environmental variable ToDo
-st_path=$PWD
+# ---- OPTIONAL in Codespaces (already done by .devcontainer/postCreate.sh) ----
+# Only needed if you are NOT working in Codespaces. Uncomment to run by hand.
+#
+# Set st_path (the path to your workspace):
+# st_path=$PWD
 # st_path="/workspaces/codespaces_NGS"
+#
+# Conda channels, MultiQC/Firefox in base and the mamba hook in ~/.bashrc:
+# # The order of conda channels is important! Please make sure that you have configured your conda channels prior to installing anything with BioConda:
+# conda config --add channels defaults
+# conda config --add channels bioconda
+# conda config --add channels conda-forge
+# conda config --set channel_priority strict
+#
+# # Install MultiQC mamba in base environment for
+# mamba install -y -n base multiqc firefox
+#
+# # add the hook to your ~/.bashrc so every new shell is initialized automatically
+# echo 'eval "$(mamba shell hook --shell bash)"' >> ~/.bashrc
+# # apply it now in this session
+# source ~/.bashrc
+#
+# ---- NECESSARY ----
+# 1. Create the mamba environment with all the tools for this practical (run once).
+mamba env create -y -f "${st_path}"/env/.environment_NGS.yaml
 
-# The order of conda channels is important! Please make sure that you have configured your conda channels prior to installing anything with BioConda:
-conda config --add channels defaults
-conda config --add channels bioconda
-conda config --add channels conda-forge
-conda config --set channel_priority strict
-
-# Install MultiQC mamba in base environment for 
-mamba install -y -n base multiqc firefox
-
-# Create and load mamba environment with all the tools needed to carry on this practical.
-mamba env create -f "${st_path}"/env/.environment_NGS.yaml
-# add the hook to your ~/.bashrc so every new shell is initialized automatically
-echo 'eval "$(mamba shell hook --shell bash)"' >> ~/.bashrc
-# apply it now in this session
-source ~/.bashrc
-# Activate environment
-mamba activate env_NGS
-# Cleaning index cache
+# 2. Clean the package cache to free disk space (run once, after creating the environment).
 mamba clean --all --yes
 
+# 3. Activate it (run in every new terminal before using igv, cutadapt, bowtie2, samtools...).
+mamba activate env_NGS
 ```   
 
 # An introduction to NGS practical 1
@@ -715,7 +721,7 @@ After you have created sorted, indexed BAM files (for example `Positive.bam`, `P
 
 1. Start the IGV desktop application by typing `igv` on your terminal.
 2. In IGV, set the genome to the reference you used (you can load a FASTA for a custom genome). 
-**Genomes > load genome from file > select path** `"${st_path}"/course_materials/genomes/AFPN02.1" and fasta sequence "AFPN02.1.fasta"`.
+**Genomes > load genome from file > select path** `"${st_path}"/course_materials/genomes/AFPN02.1/` and fasta sequence `AFPN02.1_merge.fasta`.
 3. **File > Load from File...** and select the `*.bam` files (IGV will automatically use the matching `.bai`).
 4. Navigate to regions of interest, zoom in/out, and inspect read coverage, mismatches and soft-clipping.
 
@@ -767,7 +773,7 @@ freebayes -f "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta
 vcf2fasta -f "${st_path}"/course_materials/genomes/AFPN02.1/AFPN02.1_merge.fasta -P 1 Long.vcffile -p AFPN02.1_consensus.fasta
 
 # Rename file to more precise name
-mv AFPN02.1_consensus.fastaunknown_AFPN02.1_merge:0.fasta AFPN02.1_merge_consensus.fa
+mv AFPN02.1_consensus.fastaunknown_AFPN02.1_merge:0.fa AFPN02.1_merge_consensus.fa
 
 # Read VCF file
 less Long.vcffile

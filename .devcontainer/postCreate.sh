@@ -80,4 +80,28 @@ if ! sudo docker info >/dev/null 2>&1; then
   done
 fi
 
+log "Configuring st_path for every new shell..."
+REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+if ! grep -q '^export st_path=' ~/.bashrc 2>/dev/null; then
+  echo "export st_path=\"${REPO_DIR}\"" >> ~/.bashrc
+fi
+
+# Conda channels order matters for BioConda; strict priority avoids mixed builds
+log "Configuring conda channels..."
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+
+log "Installing MultiQC and Firefox in the base environment..."
+mamba install -y -n base multiqc firefox
+
+# Load mamba in every new shell, without duplicating the line on re-runs
+BASHRC_HOOK='eval "$(mamba shell hook --shell bash)"'
+if ! grep -qxF "$BASHRC_HOOK" ~/.bashrc 2>/dev/null; then
+  echo "$BASHRC_HOOK" >> ~/.bashrc
+fi
+
+mamba clean --all --yes
+
 log "Post-create complete."

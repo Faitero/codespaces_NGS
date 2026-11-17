@@ -7,7 +7,7 @@ output:
 ---
 
     
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/FairTeach/codespaces_NGS?quickstart=1)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Faitero/codespaces_NGS-1?quickstart=1)
 
 [![Continue GitHub Codespaces](https://img.shields.io/badge/GitHub-Codespaces-181717?logo=github)](https://github.com/codespaces)
 
@@ -16,7 +16,7 @@ output:
 If you encounter some issue to download with command line you could also get file to workout this session. 
 
 ### Subset of real ENA data
-https://www.dropbox.com/s/mhsfrgl9esx9qdb/ERR1880948_subset.fastq.gz?dl=0
+https://www.dropbox.com/scl/fi/l5p9eip52yxbl1wxlcnxo/ERR1880948_subset.fastq.gz?rlkey=whguvn1papuv0pjhjjvuazylb&st=7cesr739&dl=0
 
 
 # A short introduction to using the Unix command line
@@ -107,7 +107,7 @@ mkdir intro_UNIX
 cd "${st_path}"/intro_UNIX
 
 # Download fastq sequencing data to use during this practical
-wget "https://www.dropbox.com/s/mhsfrgl9esx9qdb/ERR1880948_subset.fastq.gz" -O ERR1880948_subset.fastq.gz
+wget "https://www.dropbox.com/scl/fi/l5p9eip52yxbl1wxlcnxo/ERR1880948_subset.fastq.gz?rlkey=whguvn1papuv0pjhjjvuazylb&st=7cesr739&dl=1" -O ERR1880948_subset.fastq.gz
 
 ```
 
@@ -164,7 +164,7 @@ ls
   
 ```{bash, eval = FALSE}
 # Download fastq sequencing data to use during this practical
-wget "https://www.dropbox.com/s/mhsfrgl9esx9qdb/ERR1880948_subset.fastq.gz" -O ERR1880948_subset.fastq.gz
+wget "https://www.dropbox.com/scl/fi/l5p9eip52yxbl1wxlcnxo/ERR1880948_subset.fastq.gz?rlkey=whguvn1papuv0pjhjjvuazylb&st=7cesr739&dl=1" -O ERR1880948_subset.fastq.gz
 # list files
 ls
 # unzip the file
@@ -502,7 +502,7 @@ echo $file
 
 ### Practice example
    
-Write a bash script (call it "setup_NGS.sh") to do the copying of the course materials to your own space on ` /workspaces/codespaces_NGS/course_materials ` so that if you need to repeat this process (as described above), you can run a script to do it. Your script should take as arguments the file name you want to copy (including its full path) and the directory name where the file is to be saved and it then should do the following:
+Write a bash script (call it "third.sh") to do the copying of the course materials to your own space on ` /workspaces/codespaces_NGS/course_materials ` so that if you need to repeat this process (as described above), you can run a script to do it. Your script should take as arguments the file name you want to copy (including its full path) and the directory name where the file is to be saved and it then should do the following:
 1. Create a directory named `course_materials` under `"${st_path}"` (assuming the directory exists) and under `course_materials` create a directory called `fastq`.
 2. Copy the file `ERR1880948_subset.fastq.gz` to this fastq directory. 
 3. Print out the first four lines of the FASTQ file on the screen. HINT: you do not need to unzip the file; the `zcat` command will read the zipped file and work like `cat` would on an unzipped file.
@@ -522,8 +522,8 @@ mydir="third_folder"
 mydir2="course_materials"
 mydir3="fastq"
 
-# Download file 
-wget "https://www.dropbox.com/s/mhsfrgl9esx9qdb/ERR1880948_subset.fastq.gz?dl=0" -O ERR1880948_subset.fastq.gz
+# Download file
+wget "https://www.dropbox.com/scl/fi/l5p9eip52yxbl1wxlcnxo/ERR1880948_subset.fastq.gz?rlkey=whguvn1papuv0pjhjjvuazylb&st=7cesr739&dl=1" -O ERR1880948_subset.fastq.gz
 
 # Create folder
 mkdir ${mydir}
@@ -578,7 +578,7 @@ cd awk_test
 # Download whole fastq file
 # wget ftp.sra.ebi.ac.uk/vol1/fastq/ERR188/008/ERR1880948/ERR1880948.fastq.gz
 # Download ERR1880948 subset
-wget "https://www.dropbox.com/s/mhsfrgl9esx9qdb/ERR1880948_subset.fastq.gz?dl=0" -O ERR1880948_subset.fastq.gz
+wget "https://www.dropbox.com/scl/fi/l5p9eip52yxbl1wxlcnxo/ERR1880948_subset.fastq.gz?rlkey=whguvn1papuv0pjhjjvuazylb&st=7cesr739&dl=1" -O ERR1880948_subset.fastq.gz
 
 ```
   
@@ -667,7 +667,7 @@ BEGIN {# set parameters like the field separator}
 END {# end commands}
 ```
   
-The last awk command we wrote in awk could be rewritten as a script like this (we will call the script script.awk and use a text editor to input the code below):
+The last awk command we wrote in awk could be rewritten as a script like this (we will call the script `script.awk` and use a text editor to input the code below):
   
 ```{bash, eval = FALSE}
 BEGIN {
@@ -686,7 +686,7 @@ END {
 We can run the script using:
   
 ```{bash, eval = FALSE}
-awk -f test.awk ERR1880948_subset.fastq | head -4 | sed 's/\/1//'
+awk -f script.awk ERR1880948_subset.fastq | head -4 | sed 's/\/1//'
 ```
   
 The output should be identical to what we obtained before.
